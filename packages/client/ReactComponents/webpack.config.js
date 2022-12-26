@@ -3,6 +3,9 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// const { ModuleFederationPlugin } = require('webpack').container;
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+
 // loaders
 const postCssLoader = {
   loader: 'postcss-loader',
@@ -60,6 +63,16 @@ const htmlWebpackPluginInstances = [
 
 const miniCssExtractPluginInstance = new MiniCssExtractPlugin();
 
+const moduleFederationPluginInstance = new ModuleFederationPlugin({
+  name: 'components',
+  filename: 'remoteEntry.js',
+  exposes: {
+    './MovieCard': './src/components/MovieCard/MovieCard.jsx',
+    './BuyButton': './src/components/Button/BuyButton/BuyButton.jsx',
+    './Typography': './src/components/Typography/Typography.jsx',
+  },
+});
+
 // configObj
 const devServerConfig = {
   static: {
@@ -78,7 +91,12 @@ const configObj = {
     filename: '[name].bundle.js',
   },
   devServer: devServerConfig,
-  plugins: [...htmlWebpackPluginInstances, miniCssExtractPluginInstance],
+  devtool: 'eval-source-map',
+  plugins: [
+    ...htmlWebpackPluginInstances,
+    miniCssExtractPluginInstance,
+    moduleFederationPluginInstance,
+  ],
   module: {
     rules: [babelLoader, cssLoaders, sassLoaders],
   },

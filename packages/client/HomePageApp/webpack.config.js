@@ -3,6 +3,9 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// const { ModuleFederationPlugin } = require('webpack').container;
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+
 // loaders
 const postCssLoader = {
   loader: 'postcss-loader',
@@ -37,13 +40,13 @@ const babelLoader = {
       loader: 'babel-loader',
       options: {
         presets: [
+          '@babel/preset-react',
           [
             '@babel/preset-env',
             {
               targets: 'defaults',
             },
           ],
-          '@babel/preset-react',
         ],
       },
     },
@@ -60,13 +63,24 @@ const htmlWebpackPluginInstances = [
 
 const miniCssExtractPluginInstance = new MiniCssExtractPlugin();
 
+const moduleFederationPluginInstance = new ModuleFederationPlugin({
+  name: 'home',
+  filename: 'remoteEntry.js',
+  remotes: {
+    components: 'components@http://localhost:3002/remoteEntry.js',
+  },
+});
+
 // configObj
 const devServerConfig = {
+  port: 3000,
   static: {
     directory: path.resolve(__dirname, 'dist'),
   },
+  historyApiFallback: {
+    index: '/index.html',
+  },
   open: true,
-  port: 3000,
 };
 
 // main configObj
@@ -78,7 +92,12 @@ const configObj = {
     filename: '[name].bundle.js',
   },
   devServer: devServerConfig,
-  plugins: [...htmlWebpackPluginInstances, miniCssExtractPluginInstance],
+  devtool: 'eval-source-map',
+  plugins: [
+    ...htmlWebpackPluginInstances,
+    miniCssExtractPluginInstance,
+    moduleFederationPluginInstance,
+  ],
   module: {
     rules: [babelLoader, cssLoaders, sassLoaders],
   },
