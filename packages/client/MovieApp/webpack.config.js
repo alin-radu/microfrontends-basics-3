@@ -4,8 +4,8 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// const { ModuleFederationPlugin } = require('webpack').container;
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const { ModuleFederationPlugin } = require('webpack').container;
+// const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 
 // loaders
 const postCssLoader = {
@@ -64,12 +64,16 @@ const htmlWebpackPluginInstances = [
 
 const miniCssExtractPluginInstance = new MiniCssExtractPlugin();
 
-// const moduleFederationPluginInstance = new ModuleFederationPlugin({
-//   name: 'components',
-//   filename: 'remoteEntry.js',
-//   exposes: {
-//   },
-// });
+const moduleFederationPluginInstance = new ModuleFederationPlugin({
+  name: 'movieapp',
+  filename: 'remoteEntry.js',
+  remotes: {
+    homepage: 'home@http://localhost:3000/remoteEntry.js',
+    detailspage: 'details@http://localhost:3001/remoteEntry.js',
+    seatselection: 'seatselection@http://localhost:3003/remoteEntry.js',
+  },
+  shared: ['react', 'react-dom'],
+});
 
 // configObj
 const devServerConfig = {
@@ -78,6 +82,9 @@ const devServerConfig = {
   },
   open: true,
   port: 9000,
+  historyApiFallback: {
+    index: '/index.html',
+  },
 };
 
 // main configObj
@@ -90,7 +97,11 @@ const configObj = {
   },
   devServer: devServerConfig,
   devtool: 'eval-source-map',
-  plugins: [...htmlWebpackPluginInstances, miniCssExtractPluginInstance],
+  plugins: [
+    ...htmlWebpackPluginInstances,
+    miniCssExtractPluginInstance,
+    moduleFederationPluginInstance,
+  ],
   module: {
     rules: [babelLoader, cssLoaders, sassLoaders],
   },

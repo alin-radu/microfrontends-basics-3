@@ -1,4 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
+
+import RountingContext from '../../../context/RoutingProvider.js';
+
 import QuickBooking from '../QuickBooking/QuickBooking.jsx';
 
 import './HomeContent.scss';
@@ -33,12 +36,14 @@ const HomeContent = (props) => {
   };
 
   return (
-    <div className="home-content-container">
-      <QuickBooking></QuickBooking>
-      <div className="movies-container">
-        <Suspense fallback={<div>Loading...</div>}>{renderMovieList()}</Suspense>
+    <RountingContext.Provider value={props.routing}>
+      <div className="home-content-container">
+        <QuickBooking></QuickBooking>
+        <div className="movies-container">
+          <Suspense fallback={<div>Loading...</div>}>{renderMovieList()}</Suspense>
+        </div>
       </div>
-    </div>
+    </RountingContext.Provider>
   );
 };
 

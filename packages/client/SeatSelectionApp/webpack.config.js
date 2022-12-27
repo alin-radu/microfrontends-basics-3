@@ -64,12 +64,14 @@ const htmlWebpackPluginInstances = [
 
 const miniCssExtractPluginInstance = new MiniCssExtractPlugin();
 
-// const moduleFederationPluginInstance = new ModuleFederationPlugin({
-//   name: 'components',
-//   filename: 'remoteEntry.js',
-//   exposes: {
-//   },
-// });
+const moduleFederationPluginInstance = new ModuleFederationPlugin({
+  name: 'seatselection',
+  filename: 'remoteEntry.js',
+  exposes: {
+    './SeatSelection': './src/components/SeatSelectionContent/SeatSelectionContent.jsx',
+  },
+  shared: ['react', 'react-dom'],
+});
 
 // configObj
 const devServerConfig = {
@@ -78,6 +80,9 @@ const devServerConfig = {
   },
   open: true,
   port: 3003,
+  historyApiFallback: {
+    index: '/index.html',
+  },
 };
 
 // main configObj
@@ -90,7 +95,11 @@ const configObj = {
   },
   devServer: devServerConfig,
   devtool: 'eval-source-map',
-  plugins: [...htmlWebpackPluginInstances, miniCssExtractPluginInstance],
+  plugins: [
+    ...htmlWebpackPluginInstances,
+    miniCssExtractPluginInstance,
+    moduleFederationPluginInstance,
+  ],
   module: {
     rules: [babelLoader, cssLoaders, sassLoaders],
   },

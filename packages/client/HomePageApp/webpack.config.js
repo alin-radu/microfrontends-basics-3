@@ -69,6 +69,10 @@ const moduleFederationPluginInstance = new ModuleFederationPlugin({
   remotes: {
     components: 'components@http://localhost:3002/remoteEntry.js',
   },
+  exposes: {
+    './HomePage': './src/components/HomeContent/HomeContent.jsx',
+  },
+  shared: ['react', 'react-dom'],
 });
 
 // configObj
@@ -77,10 +81,10 @@ const devServerConfig = {
   static: {
     directory: path.resolve(__dirname, 'dist'),
   },
+  open: true,
   historyApiFallback: {
     index: '/index.html',
   },
-  open: true,
 };
 
 // main configObj

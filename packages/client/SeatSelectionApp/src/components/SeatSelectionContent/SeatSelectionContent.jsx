@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import "./SeatSelectionContent.scss";
+import React, { useEffect, useState } from 'react';
+import './SeatSelectionContent.scss';
 
-const SeatSelectionContent = () => {
+const SeatSelectionContent = (props) => {
+  console.log('%c-> developmentConsole: props= ', 'color:#77dcfd', props);
   const [bookingData, setBookingData] = useState({
-    movie: "Select Movie",
-    date: "Select Date",
-    time: "Select Time",
-    imageUrl: "",
+    movie: 'Select Movie',
+    date: 'Select Date',
+    time: 'Select Time',
+    imageUrl: '',
   });
   const [seatsCount, setSeatsCount] = useState(0);
 
   const loadBooking = async (booking) => {
-    const resp = await fetch("http://localhost:5555/movies");
+    const resp = await fetch('http://localhost:5555/movies');
     const data = await resp.json();
 
     const selectedMovie = data.filter((movie) => {
@@ -32,12 +33,12 @@ const SeatSelectionContent = () => {
   };
 
   const toggleSeatSelection = (e) => {
-    if (e.target.classList.contains("selected")) {
+    if (e.target.classList.contains('selected')) {
       setSeatsCount(seatsCount - 1);
     } else {
       setSeatsCount(seatsCount + 1);
     }
-    e.target.classList.toggle("selected");
+    e.target.classList.toggle('selected');
   };
 
   const renderSeats = () => {
@@ -50,15 +51,18 @@ const SeatSelectionContent = () => {
   };
 
   const seatsBooked = () => {
-    alert(
-      `Movie Booked ${bookingData.movie}, seats Booked ${seatsCount} -- ENJOY !!!!!`
-    );
+    alert(`Movie Booked ${bookingData.movie}, seats Booked ${seatsCount} -- ENJOY !!!!!`);
   };
 
   return (
     <div className="seat-selection-container">
       <div className="column">{renderImage()}</div>
       <div className="column full-width p-20">
+        <span>
+          <button onClick={() => props.routing.history.push('/')}>
+            <b>Back Home</b>
+          </button>
+        </span>
         <span className="movie-title">{bookingData.movie}</span>
         <span className="mt-2"> Book Movie</span>
         <span className="mt-2">
@@ -80,6 +84,7 @@ const SeatSelectionContent = () => {
           <span>
             Total Cost <strong>{seatsCount * 10}$</strong>
           </span>
+
           <button onClick={seatsBooked}>Book</button>
         </div>
       </div>

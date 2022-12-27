@@ -81,6 +81,9 @@ const devServerConfig = {
   },
   open: true,
   port: 3002,
+  historyApiFallback: {
+    index: '/index.html',
+  },
 };
 
 // main configObj
