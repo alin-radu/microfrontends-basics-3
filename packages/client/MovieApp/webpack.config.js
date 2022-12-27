@@ -1,4 +1,4 @@
-// DetailsPage
+// MovieApp
 const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -77,7 +77,7 @@ const devServerConfig = {
     directory: path.resolve(__dirname, 'dist'),
   },
   open: true,
-  port: 3001,
+  port: 9000,
 };
 
 // main configObj
@@ -96,7 +96,7 @@ const configObj = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'async',
+      chunks: 'all',
     },
   },
 };
