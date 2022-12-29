@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './SeatSelectionContent.scss';
 
 const SeatSelectionContent = (props) => {
-  console.log('%c-> developmentConsole: props= ', 'color:#77dcfd', props);
   const [bookingData, setBookingData] = useState({
     movie: 'Select Movie',
     date: 'Select Date',
@@ -11,7 +10,21 @@ const SeatSelectionContent = (props) => {
   });
   const [seatsCount, setSeatsCount] = useState(0);
 
+  useEffect(() => {
+    import('movieapp/MovieData').then((module) => {
+      const movieData = module.default;
+      movieData.subscribe({
+        next: (val) => {
+          loadBooking(val);
+        },
+      });
+    });
+  }, []);
+
   const loadBooking = async (booking) => {
+    if (!booking) {
+      return;
+    }
     const resp = await fetch('http://localhost:5555/movies');
     const data = await resp.json();
 
@@ -28,6 +41,9 @@ const SeatSelectionContent = (props) => {
   };
 
   const renderImage = () => {
+    if (!bookingData.imageUrl) {
+      return;
+    }
     const imgUrl = `http://localhost:5555/images/${bookingData.imageUrl}`;
     return <img src={imgUrl}></img>;
   };

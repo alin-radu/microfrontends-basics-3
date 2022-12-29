@@ -1,4 +1,4 @@
-import React, { useState, context, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 
 import RountingContext from '../../../context/RoutingProvider';
 
@@ -6,7 +6,7 @@ import './QuickBooking.scss';
 
 const Typography = React.lazy(() => import('components/Typography'));
 
-const QuickBooking = (context) => {
+const QuickBooking = () => {
   const [movie, setMovie] = useState('1');
   const [date, setDate] = useState('01/02/2022');
   const [time, setTime] = useState('10 Am');
@@ -17,7 +17,12 @@ const QuickBooking = (context) => {
       date,
       time,
     };
-    context.history.push('book');
+
+    import('movieapp/MovieData').then((module) => {
+      const movieData = module.default;
+      movieData.next(booking);
+      context.history.push('book');
+    });
   };
 
   return (

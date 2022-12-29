@@ -67,6 +67,9 @@ const miniCssExtractPluginInstance = new MiniCssExtractPlugin();
 const moduleFederationPluginInstance = new ModuleFederationPlugin({
   name: 'movieapp',
   filename: 'remoteEntry.js',
+  exposes: {
+    './MovieData': './src/utils/movieObservable.js',
+  },
   remotes: {
     homepage: 'home@http://localhost:3000/remoteEntry.js',
     detailspage: 'details@http://localhost:3001/remoteEntry.js',
